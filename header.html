@@ -1,11 +1,11 @@
 {# templates/header.html #}
-<header class="sticky top-0 z-30 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
+<header class="sticky top-0 z-30 {% if request.path == '/' %}bg-transparent text-white{% else %}bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700{% endif %}">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
 
     <!-- 🔷 Logo -->
     <a href="{{ url_for('index') }}"
-       class="text-xl font-bold text-purple-600 dark:text-purple-400 whitespace-nowrap">
-      <h1 class="font-fredoka text-3xl text-flotti-primary">Flotti</h1>
+       class="text-xl font-bold {% if request.path == '/' %}text-white{% else %}text-purple-600 dark:text-purple-400{% endif %} whitespace-nowrap">
+      <h1 class="font-fredoka text-3xl {% if request.path == '/' %}text-white{% else %}text-flotti-primary{% endif %}">Flotti</h1>
     </a>
 
     <!-- 🔍 Suche: nur anzeigen wenn NICHT auf / -->
@@ -22,7 +22,7 @@
 
     <!-- ☰ Menü-Button -->
     <div class="relative">
-      <button id="menuToggle" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none text-2xl sm:text-3xl">
+      <button id="menuToggle" class="{% if request.path == '/' %}text-white hover:text-white{% else %}text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400{% endif %} focus:outline-none text-2xl sm:text-3xl">
         ☰
       </button>
 
