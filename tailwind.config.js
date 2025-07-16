@@ -7,13 +7,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#3B82F6', // z. B. für Buttons etc.
-        secondary: '#F59E0B',
-        background: '#F3F4F6',
+        flotti: {
+          primary: '#F24405',
+          secondary: '#F26849',
+          accent: '#F23005',
+          highlight: '#F28D8D',
+          background: '#E2C9F2',
+        },
       },
       fontFamily: {
-        sans: ['"Inter"', 'sans-serif'],
-      }
+        
+        fredoka: ['Fredoka', 'sans-serif'],
+      },
     },
   },
   plugins: [],

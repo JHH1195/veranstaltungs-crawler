@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-6">
+
+  <h1 class="text-2xl my-12 font-bold text-gray-800 dark:text-white mb-6">
+    Ergebnisse
+  </h1>
+
+{% if events %}
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {% for event in events %}
+  <a href="{{ url_for('event_detail', event_id=event.id) }}"
+     class="block rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-sm hover:shadow-lg transition border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400">
+
+    <!-- Bild -->
+    {% if event.image_url %}
+    <img src="{{ event.image_url }}" alt="{{ event.title }}"
+         class="w-full h-48 object-cover" />
+    {% else %}
+    <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500">
+      Kein Bild
+    </div>
+    {% endif %}
+
+      <!-- Inhalt -->
+      <div class="p-4">
+        <div class="text-sm text-gray-500 dark:text-gray-400 flex justify-between mb-1">
+         <span>{{ event.date.strftime("%d.%m.%Y") }}</span>
+          <span>{{ event.location or "Ort unbekannt" }}</span>
+        </div>
+
+        <h2 class="text-base font-semibold text-gray-800 dark:text-white mb-1">
+          {{ event.title }}
+        </h2>
+
+        <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+          {{ event.description }}
+        </p>
+
+        <div class="mt-3 flex flex-wrap gap-2 text-xs text-white">
+          {% if event.price == 0 or event.is_free %}
+          <span class="bg-green-500 rounded-full px-2 py-1">Kostenlos</span>
+          {% elif event.price %}
+          <span class="bg-purple-600 rounded-full px-2 py-1">{{ event.price }} €</span>
+          {% endif %}
+          {% if event.is_outdoor %}
+          <span class="bg-blue-500 rounded-full px-2 py-1">Draußen</span>
+          {% endif %}
+          {% if event.age_group %}
+          <span class="bg-gray-500 rounded-full px-2 py-1">{{ event.age_group }}</span>
+          {% endif %}
+        </div>
+
+        <div class="mt-4">
+          <button class="w-full py-2 px-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-purple-600">
+            Mehr erfahren
+          </button>
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-gray-600 dark:text-gray-300">Keine Veranstaltungen gefunden.</p>
+  {% endif %}
+</div>
+{% endblock %}

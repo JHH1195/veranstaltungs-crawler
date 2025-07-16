@@ -1,0 +1,54 @@
+{# templates/header.html #}
+<header class="sticky top-0 z-30 bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+
+    <!-- 🔷 Logo -->
+    <a href="{{ url_for('index') }}"
+       class="text-xl font-bold text-purple-600 dark:text-purple-400 whitespace-nowrap">
+      <h1 class="font-fredoka text-3xl text-flotti-primary">Flotti</h1>
+    </a>
+
+    <!-- 🔍 Suche: nur anzeigen wenn NICHT auf / -->
+    {% if not request.path == '/' %}
+    <form action="{{ url_for('suchergebnisse') }}" method="get" class="flex-1 max-w-md hidden sm:block">
+      <input
+        type="text"
+        name="q"
+        placeholder="Suche nach Ort oder Begriff"
+        value="{{ query if query else '' }}"
+        class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring focus:ring-purple-300" />
+    </form>
+    {% endif %}
+
+    <!-- ☰ Menü-Button -->
+    <div class="relative">
+      <button id="menuToggle" class="text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 focus:outline-none text-2xl sm:text-3xl">
+        ☰
+      </button>
+
+      <!-- 🌐 Dropdown -->
+      <div id="menuDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-50">
+        <a href="/favorites" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">⭐ Favoriten</a>
+        <a href="/event-erstellen" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">➕ Event erstellen</a>
+        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">🌐 Sprache</a>
+        <a href="/faq" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">❓ FAQ</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 🧠 Menü-JavaScript -->
+<script>
+  const toggle = document.getElementById('menuToggle');
+  const dropdown = document.getElementById('menuDropdown');
+  if (toggle && dropdown) {
+    toggle.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+    });
+    document.addEventListener('click', (e) => {
+      if (!dropdown.contains(e.target) && !toggle.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  }
+</script>

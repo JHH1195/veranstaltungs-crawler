@@ -1,0 +1,49 @@
+<footer class="bg-gray-100 dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-300 border-t dark:border-gray-700">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+
+    <div>
+      <a href="/" class="font-bold text-lg text-indigo-600 dark:text-indigo-400">FamilienRadar</a>
+      <p class="mt-2 text-gray-500 dark:text-gray-400">Finde passende Aktivitäten für Groß & Klein.</p>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-2">Rechtliches</h3>
+      <ul class="space-y-1">
+        <li><a href="/impressum" class="hover:underline">Impressum</a></li>
+        <li><a href="/datenschutz" class="hover:underline">Datenschutzerklärung</a></li>
+        <li><a href="/nutzungsbedingungen" class="hover:underline">Nutzungsbedingungen</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-2">Plattform</h3>
+      <ul class="space-y-1">
+        <li><a href="/ueber-uns" class="hover:underline">Über uns</a></li>
+        <li><a href="/so-funktionierts" class="hover:underline">So funktioniert’s</a></li>
+        <li><a href="/vorgaben" class="hover:underline">Inhaltliche Vorgaben</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-2">Vorschläge</h3>
+      <ul class="space-y-1">
+        <li><a href="/top-20" class="hover:underline">Top 20 pro Stadt</a></li>
+        <li><a href="/ideen/draussen" class="hover:underline">Draußen</a></li>
+        <li><a href="/ideen/drinnen" class="hover:underline">Drinnen</a></li>
+        <li><a href="/ideen/kostenlos" class="hover:underline">Kostenlos</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- 🌗 Dark Mode Toggle -->
+<div class="mt-6 text-center">
+  <button id="theme-toggle" class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-lg shadow hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 3.5a1 1 0 01.993.883L11 4.5v1a1 1 0 01-1.993.117L9 5.5v-1a1 1 0 011-1zM15.657 6.343a1 1 0 011.497 1.32l-.083.094-1 1a1 1 0 01-1.497-1.32l.083-.094 1-1zM17.5 10a1 1 0 01.117 1.993L17.5 12h-1a1 1 0 01-.117-1.993L16.5 10h1zM15.657 13.657a1 1 0 01.083 1.32l-.083.094-1 1a1 1 0 01-1.497-1.32l.083-.094 1-1a1 1 0 011.414 0zM10 15.5a1 1 0 01.993.883L11 16.5v1a1 1 0 01-1.993.117L9 17.5v-1a1 1 0 011-1zM6.343 13.657a1 1 0 011.497 1.32l-.083.094-1 1a1 1 0 01-1.497-1.32l.083-.094 1-1zM4.5 10a1 1 0 01.117 1.993L4.5 12h-1a1 1 0 01-.117-1.993L3.5 10h1zM6.343 6.343a1 1 0 011.497 1.32l-.083.094-1 1a1 1 0 01-1.497-1.32l.083-.094 1-1z"/></svg>
+    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707 8 8 0 1017.293 13.293z"/></svg>
+    <span class="ml-2">Dark Mode umschalten</span>
+  </button>
+</div>
+
+  <div class="text-center text-xs py-4 border-t dark:border-gray-700">
+    © {{ current_year | default("2025") }} FamilienRadar. Alle Rechte vorbehalten.
+  </div>
+</footer>

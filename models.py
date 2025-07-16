@@ -17,15 +17,21 @@ class Event(Base):
     category = Column(String, default="Unbekannt")
     source_url = Column(String)
     source_name = Column(String)
+    lat = Column(Float)  # 🆕 Latitude
+    lon = Column(Float)  # 🆕 Longitude
 
 class Quelle(Base):
     __tablename__ = "quellen"
+
     id = Column(Integer, primary_key=True)
     name = Column(String)
     url = Column(String, unique=True)
     typ = Column(String)       # z. B. "playwright", "rss", "html"
     stadt = Column(String)     # z. B. "Aachen"
-    aktiv = Column(Boolean)    # True = aktuell aktiv nutzen
+    aktiv = Column(Boolean)    # True = aktiv nutzen
+    status = Column(String, default="pending")  # "pending", "success", "error"
+    created_at = Column(DateTime, default=datetime.utcnow)
+
    
 # DB-Verbindung (lokal, SQLite-Datei)
 engine = create_engine("sqlite:///events.db")
