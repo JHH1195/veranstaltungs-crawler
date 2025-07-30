@@ -2,42 +2,44 @@ import requests
 from bs4 import BeautifulSoup
 from models import Session, Quelle, Event
 from datetime import datetime
+from dateparser import parse as date_parse
 import re
-import dateparser
 
 def extract_event_blocks(html):
-    """
-    Sucht potenzielle Event-Container auf der Seite.
-    """
     soup = BeautifulSoup(html, "html.parser")
     return soup.find_all(["article", "section", "div"], recursive=True)
 
-def extract_event_data(block, quelle):
+def extract_event_data(block, quelle, url):
     """
-    Extrahiert Event-Daten aus einem HTML-Block.
+    Versucht HTML-Daten zu extrahieren. Nutzt GPT-4o nur, wenn nötig.
     """
-    title_tag = block.find(["h1", "h2", "h3"])
-    title = title_tag.get_text(strip=True) if title_tag else None
+    try:
+        # 1. Titel aus h1–h3
+        title_tag = block.find(["h1", "h2", "h3"])
+        title = title_tag.get_text(strip=True) if title_tag else None
 
-    description = block.get_text(" ", strip=True)
-    date_match = re.search(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", description)
+        # 2. Beschreibung (HTML-Flachtext)
+        import trafilatura
+        description = trafilatura.extract(str(block)) or block.get_text(" ", strip=True)
 
-    parsed_date = None
-    if date_match:
-        raw_date = date_match.group(0)
-        parsed_date = dateparser.parse(raw_date, languages=["de"])
 
-    if not title or not parsed_date:
+        # 3. Datum im deutschen Format
+        date_match = re.search(r"\b\d{1,2}\.\d{1,2}\.\d{4}\b", description)
+        parsed_date = date_parse(date_match.group(0), languages=["de"]) if date_match else None
+        date_str = parsed_date.strftime("%Y-%m-%d") if parsed_date else None
+
+        return {
+            "title": title or "Titel unbekannt",
+            "description": description,
+            "date": date_str or "2099-12-31",
+            "location": quelle.stadt or "Ort unbekannt",
+            "source_url": quelle.url,
+            "source_name": quelle.name
+        }
+
+    except Exception as e:
+        print("❌ Fehler in extract_event_data:", e)
         return None
-
-    return {
-        "title": title,
-        "description": description,
-        "date": parsed_date.strftime("%Y-%m-%d"),
-        "location": quelle.stadt,
-        "source_url": quelle.url,
-        "source_name": quelle.name
-    }
 
 def crawl_pending_quellen():
     session = Session()
@@ -47,7 +49,7 @@ def crawl_pending_quellen():
     for quelle in quellen:
         try:
             print(f"🌐 Lade: {quelle.url}")
-            response = requests.get(quelle.url, timeout=10, headers={"User-Agent": "Mozilla/5.0"})
+            response = requests.get(quelle.url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
             response.raise_for_status()
             html = response.text
 
@@ -58,12 +60,17 @@ def crawl_pending_quellen():
             übersprungen = 0
 
             for block in blocks:
-                data = extract_event_data(block, quelle)
+                data = extract_event_data(block, quelle, quelle.url)
                 if not data:
                     übersprungen += 1
                     continue
 
-                already_exists = session.query(Event).filter_by(source_url=data["source_url"]).first()
+                already_exists = session.query(Event).filter_by(
+                    title=data["title"],
+                    date=data["date"],
+                    location=data["location"]
+                ).first()
+
                 if not already_exists:
                     session.add(Event(**data))
                     events_gespeichert += 1
@@ -76,7 +83,7 @@ def crawl_pending_quellen():
             else:
                 print(f"⚠️ Keine neuen Eventdaten bei {quelle.url}")
             if übersprungen:
-                print(f"↪️ {übersprungen} Blöcke übersprungen (unvollständig)")
+                print(f"↪️ {übersprungen} Blöcke übersprungen (Fehler beim Parsen)")
 
         except Exception as e:
             print(f"❌ Fehler bei {quelle.url}: {e}")
